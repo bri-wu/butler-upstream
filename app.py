@@ -21,7 +21,7 @@ from typing import Optional
 
 import subprocess, tempfile, shutil, os, sys, re, pathlib   # ← extend existing line
 
-# --- ensure repo-local packages are on PYTHONPATH -----------------
+# --------------------
 repo_root = pathlib.Path(entry_script).resolve().parents[2]
 extra     = repo_root / "lammps_pypack"
 env       = os.environ.copy()
@@ -69,8 +69,20 @@ def detect_entry_script(repo_path: Path) -> Optional[Path]:
 
 def stream_subprocess(cmd: list[str], cwd: Path):
     """Yield lines from a subprocess in real-time."""
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                        text=True, env=env)
+        cmd = [sys.executable, entry_script, "sim1"]   # ← this is inside some run_demo() fn
+
+    # --- ensure repo-local packages are on PYTHONPATH -----------------
+    repo_root = pathlib.Path(entry_script).resolve().parents[2]
+    extra     = repo_root / "lammps_pypack"
+    env       = os.environ.copy()
+    if extra.is_dir():
+        env["PYTHONPATH"] = f"{extra}:{env.get('PYTHONPATH', '')}"
+    # ------------------------------------------------------------------
+
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, text=True, env=env)
+
+    
     for line in proc.stdout:
         yield line.rstrip()
     proc.wait()
