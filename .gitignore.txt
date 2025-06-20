@@ -1,0 +1,5 @@
+# .gitignore  – keep large run outputs out of Git
+sim*/          # folders like sim1/, sim2/
+*.dump         # trajectory dumps
+log.lammps     # raw thermo log
+__pycache__/   # Python byte-code
