@@ -21,12 +21,6 @@ from typing import Optional
 
 import subprocess, tempfile, shutil, os, sys, re, pathlib   # ← extend existing line
 
-# --------------------
-repo_root = pathlib.Path(entry_script).resolve().parents[2]
-extra     = repo_root / "lammps_pypack"
-env       = os.environ.copy()
-if extra.is_dir():
-    env["PYTHONPATH"] = f"{extra}:{env.get('PYTHONPATH', '')}"
 # ------------------------------------------------------------------
 
 
