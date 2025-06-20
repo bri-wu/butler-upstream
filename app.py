@@ -1,11 +1,11 @@
-# app.py – Day‑1.1 prototype for the “Simulation Butler”
+# app.py - Day-1.1 prototype for the “Simulation Butler”
 # -------------------------------------------------------
-# This refresh fixes the missing‑log issue you hit:
+# This refresh fixes the missing-log issue you hit:
 #   • Runs the entry script from **its own directory** so relative paths work.
 #   • Recursively searches for the first `log.lammps` produced and plots it.
 #   • Adds a little directory browser so you can inspect what files were created.
-# This is still *manifest‑less* and single‑script, but robust enough for the
-# current LAMMPSStructures repo. Later we’ll re‑introduce the manifest layer.
+# This is still *manifest-less* and single-script, but robust enough for the
+# current LAMMPSStructures repo. Later we’ll re-introduce the manifest layer.
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ import pandas as pd
 import streamlit as st
 from plotly import express as px
 
-st.set_page_config(page_title="Simulation Butler – Day‑1 Pilot", layout="wide")
+st.set_page_config(page_title="Simulation Butler - Day-1 Pilot", layout="wide")
 
 ################################################################################
 # Helper functions
@@ -49,7 +49,7 @@ def detect_entry_script(repo_path: Path) -> Optional[Path]:
     """Heuristic: choose *cylindrical_sheet.py* if present, else first *.py*."""
     for p in repo_path.rglob("cylindrical_sheet.py"):
         return p
-    # fallback – first reasonably small Python file under 500 lines
+    # fallback - first reasonably small Python file under 500 lines
     for p in repo_path.rglob("*.py"):
         if p.stat().st_size < 200_000:  # ~5k LOC
             return p
@@ -57,7 +57,7 @@ def detect_entry_script(repo_path: Path) -> Optional[Path]:
 
 
 def stream_subprocess(cmd: list[str], cwd: Path):
-    """Yield lines from a subprocess in real‑time."""
+    """Yield lines from a subprocess in real-time."""
     proc = subprocess.Popen(cmd, cwd=cwd, stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT, text=True, bufsize=1)
     for line in proc.stdout:
@@ -93,7 +93,7 @@ def parse_lammps_log(path: Path) -> pd.DataFrame:
 # UI
 ################################################################################
 
-st.title("🛠️ Simulation Butler – Day‑1 Pilot")
+st.title("🛠️ Simulation Butler - Day-1 Pilot")
 
 repo_url = st.text_input("Paste a public Git URL to a simulation repo:",
                          value="https://github.com/adguerra/LAMMPSStructures")
@@ -120,12 +120,12 @@ if "repo_path" in st.session_state:
 
     st.text_input("Entry script to run:", value=str(entry_script), key="entry_script")
 
-    # Output folder – script expects one positional arg
+    # Output folder - script expects one positional arg
     out_folder = st.text_input("Output folder name (argument to script):", value="sim1")
 
     cols = st.columns(2)
     sim_time = cols[0].number_input("Total physical time [s]", value=0.5)
-    timestep = cols[1].number_input("LAMMPS time‑step [s]", value=1e‑6, format="%.1e")
+    timestep = cols[1].number_input("LAMMPS time-step [s]", value=1e-6, format="%.1e")
 
     if st.button("▶️ Run simulation"):
         st.markdown(f"```bash\npython {Path(entry_script).name} {out_folder}\n```")
@@ -148,7 +148,7 @@ if "repo_path" in st.session_state:
         # --- locate log file ---
         log_path = find_log_file(entry_script.parent, out_folder)
         if not log_path:
-            st.warning("Couldn't find log.lammps – nothing to plot")
+            st.warning("Couldn't find log.lammps - nothing to plot")
             # Offer a directory tree for inspection
             with st.expander("📂 Browse run directory"):
                 for p in (entry_script.parent / out_folder).rglob("*"):
