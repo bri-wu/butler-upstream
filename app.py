@@ -69,7 +69,7 @@ def detect_entry_script(repo_path: Path) -> Optional[Path]:
 
 def stream_subprocess(cmd: list[str], cwd: Path):
     """Yield lines from a subprocess in real-time."""
-        cmd = [sys.executable, entry_script, "sim1"]   # ← this is inside some run_demo() fn
+    cmd = [sys.executable, entry_script, "sim1"]   # ← this is inside some run_demo() fn
 
     # --- ensure repo-local packages are on PYTHONPATH -----------------
     repo_root = pathlib.Path(entry_script).resolve().parents[2]
@@ -82,7 +82,7 @@ def stream_subprocess(cmd: list[str], cwd: Path):
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE, text=True, env=env)
 
-    
+
     for line in proc.stdout:
         yield line.rstrip()
     proc.wait()
