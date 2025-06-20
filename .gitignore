@@ -1,0 +1,4 @@
+sim*/
+*.dump
+log.lammps
+__pycache__/
